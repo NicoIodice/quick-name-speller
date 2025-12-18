@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Name Speller</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main Menu Screen -->
+    <div id="mainMenu" class="screen active">
+        <div class="container">
+            <h1>Quick Name Speller</h1>
+            
+            <div class="menu-options">
+                <button class="menu-btn" onclick="selectGameMode('solo')">
+                    <span class="btn-icon">🎮</span>
+                    <span class="btn-text">Solo Game</span>
+                </button>
+                <button class="menu-btn" onclick="selectGameMode('pvp')">
+                    <span class="btn-icon">⚔️</span>
+                    <span class="btn-text">Player vs Player</span>
+                </button>
+                <button class="menu-btn" onclick="selectGameMode('team')">
+                    <span class="btn-icon">👥</span>
+                    <span class="btn-text">Team vs Team</span>
+                </button>
+            </div>
+
+            <div class="settings-footer">
+                <button class="settings-btn" onclick="toggleSettings()">⚙️ Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settingsScreen" class="screen">
+        <div class="container">
+            <h2>Settings</h2>
+            
+            <div class="setting-item">
+                <label for="languageSelect">Language:</label>
+                <select id="languageSelect" onchange="changeLanguage()">
+                    <option value="pt" selected>Português</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label>
+                    <input type="checkbox" id="displayScoreToggle" checked>
+                    Display Score at End
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <label>
+                    <input type="checkbox" id="manualPointsToggle">
+                    Manual Points Entry
+                </label>
+            </div>
+
+            <div class="setting-item" id="manualPointsSettings" style="display: none;">
+                <label for="easyPoints">Easy Points:</label>
+                <input type="number" id="easyPoints" value="5" min="1">
+                
+                <label for="mediumPoints">Medium Points:</label>
+                <input type="number" id="mediumPoints" value="10" min="1">
+                
+                <label for="hardPoints">Hard Points:</label>
+                <input type="number" id="hardPoints" value="15" min="1">
+            </div>
+
+            <button class="back-btn" onclick="toggleSettings()">Back</button>
+        </div>
+    </div>
+
+    <!-- Game Setup Screen -->
+    <div id="setupScreen" class="screen">
+        <div class="container">
+            <h2 id="setupTitle">Game Setup</h2>
+            
+            <div id="soloSetup" class="setup-form">
+                <div class="form-group">
+                    <label for="playerName">Player Name:</label>
+                    <input type="text" id="playerName" placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty">Difficulty:</label>
+                    <select id="difficulty">
+                        <option value="easy" selected>Easy (2s)</option>
+                        <option value="medium">Medium (1.5s)</option>
+                        <option value="hard">Hard (1s)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rounds">Number of Rounds:</label>
+                    <input type="number" id="rounds" value="1" min="1" max="10">
+                </div>
+            </div>
+
+            <div id="pvpSetup" class="setup-form" style="display: none;">
+                <div class="form-group">
+                    <label for="player1Name">Player 1 Name:</label>
+                    <input type="text" id="player1Name" placeholder="Player 1">
+                </div>
+                <div class="form-group">
+                    <label for="player2Name">Player 2 Name:</label>
+                    <input type="text" id="player2Name" placeholder="Player 2">
+                </div>
+                <div class="form-group">
+                    <label for="pvpRounds">Number of Rounds:</label>
+                    <input type="number" id="pvpRounds" value="1" min="1" max="10">
+                </div>
+            </div>
+
+            <div id="teamSetup" class="setup-form" style="display: none;">
+                <div class="form-group">
+                    <label for="team1Name">Team 1 Name:</label>
+                    <input type="text" id="team1Name" placeholder="Team 1">
+                </div>
+                <div class="form-group">
+                    <label for="team2Name">Team 2 Name:</label>
+                    <input type="text" id="team2Name" placeholder="Team 2">
+                </div>
+                <div class="form-group">
+                    <label for="teamRounds">Number of Rounds:</label>
+                    <input type="number" id="teamRounds" value="1" min="1" max="10">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="back-btn" onclick="backToMenu()">Back</button>
+                <button class="start-btn" onclick="startGame()">Start Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Countdown Screen -->
+    <div id="countdownScreen" class="screen">
+        <div class="countdown-container">
+            <div id="countdownNumber" class="countdown-number">3</div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen">
+        <div class="game-container">
+            <div class="game-header">
+                <div class="score-display">
+                    <span id="currentPlayer"></span>
+                    <span id="scoreText">Score: <span id="score">0</span></span>
+                </div>
+                <div class="round-display">
+                    Round: <span id="currentRound">1</span> / <span id="totalRounds">1</span>
+                </div>
+            </div>
+
+            <div id="imageGrid" class="image-grid">
+                <!-- Grid will be generated dynamically -->
+            </div>
+
+            <div class="answer-buttons">
+                <!-- Answer buttons will be generated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="screen">
+        <div class="container">
+            <h2>Game Over!</h2>
+            
+            <div id="finalScores" class="final-scores">
+                <!-- Scores will be displayed here -->
+            </div>
+
+            <div class="button-group">
+                <button class="back-btn" onclick="backToMenu()">Main Menu</button>
+                <button class="retry-btn" onclick="retryGame()">Retry</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="bgMusic" loop>
+        <source src="sounds/background.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="startSound">
+        <source src="sounds/start.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="correctSound">
+        <source src="sounds/correct.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="wrongSound">
+        <source src="sounds/wrong.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="config.json"></script>
+    <script src="game.js"></script>
+</body>
+</html>

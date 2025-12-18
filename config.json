@@ -1,0 +1,36 @@
+{
+  "languages": {
+    "pt": {
+      "animals": ["gato", "pato", "sapo"],
+      "translations": {
+        "gato": "Gato",
+        "pato": "Pato",
+        "sapo": "Sapo"
+      }
+    },
+    "en": {
+      "animals": ["gato", "pato", "sapo"],
+      "translations": {
+        "gato": "Cat",
+        "pato": "Duck",
+        "sapo": "Frog"
+      }
+    }
+  },
+  "difficulty": {
+    "easy": {
+      "time": 800,
+      "points": 5
+    },
+    "medium": {
+      "time": 600,
+      "points": 10
+    },
+    "hard": {
+      "time": 400,
+      "points": 15
+    }
+  },
+  "gridSize": 6,
+  "imagePath": "data"
+}
