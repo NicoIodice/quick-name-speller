@@ -394,6 +394,15 @@ function nextTurn() {
 
 function endGame() {
     clearInterval(gameState.highlightInterval);
+    
+    // Clear all highlights and feedback classes
+    document.querySelectorAll('.grid-item').forEach(item => {
+        item.classList.remove('highlighted', 'correct', 'wrong');
+    });
+    
+    // Clear answer buttons
+    document.querySelector('.answer-buttons').innerHTML = '';
+    
     stopBackgroundMusic();
     
     showScreen('resultsScreen');
