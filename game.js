@@ -46,7 +46,7 @@ const config = {
         medium: { time: 600, points: 10 },
         hard: { time: 400, points: 15 }
     },
-    gridSize: 6,
+    gridSize: 8,
     imagePath: "data"
 };
 
@@ -194,8 +194,8 @@ function startGame() {
     gameState.currentRound = 0;
     gameState.currentPlayerIndex = 0;
     
-    // Start countdown
-    startCountdown();
+    // Start first round
+    startRound();
 }
 
 function startCountdown() {
@@ -238,12 +238,11 @@ function startRound() {
 
 function setupGameBoard() {
     const grid = document.getElementById('imageGrid');
-    const answerButtons = document.querySelector('.answer-buttons');
     
     // Get random animals for each square
     const animals = config.languages[gameState.language].animals;
     gameState.currentImages = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
         const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
         gameState.currentImages.push(randomAnimal);
     }
@@ -261,18 +260,6 @@ function setupGameBoard() {
         
         item.appendChild(img);
         grid.appendChild(item);
-    });
-    
-    // Generate answer buttons (all 3 animals)
-    answerButtons.innerHTML = '';
-    const shuffledAnimals = [...animals].sort(() => Math.random() - 0.5);
-    
-    shuffledAnimals.forEach(animal => {
-        const btn = document.createElement('button');
-        btn.className = 'answer-btn';
-        btn.textContent = config.languages[gameState.language].translations[animal];
-        btn.onclick = () => checkAnswer(animal);
-        answerButtons.appendChild(btn);
     });
     
     // Update header
@@ -302,19 +289,21 @@ function startHighlighting() {
             item.classList.remove('highlighted');
         });
         
-        // Add highlight to current square
-        if (gameState.currentSquare < 6) {
-            const items = document.querySelectorAll('.grid-item');
-            items[gameState.currentSquare].classList.add('highlighted');
-            gameState.correctAnswer = gameState.currentImages[gameState.currentSquare];
-            gameState.currentSquare++;
-        } else {
-            // Reset to beginning
-            gameState.currentSquare = 0;
-            items[0].classList.add('highlighted');
-            gameState.correctAnswer = gameState.currentImages[0];
-            gameState.currentSquare = 1;
+        // Check if we've highlighted all squares
+        if (gameState.currentSquare >= 8) {
+            clearInterval(gameState.highlightInterval);
+            // Move to next round or end game
+            setTimeout(() => {
+                nextTurn();
+            }, difficultyTime);
+            return;
         }
+        
+        // Add highlight to current square
+        const items = document.querySelectorAll('.grid-item');
+        items[gameState.currentSquare].classList.add('highlighted');
+        gameState.correctAnswer = gameState.currentImages[gameState.currentSquare];
+        gameState.currentSquare++;
     }, difficultyTime);
 }
 
@@ -359,9 +348,6 @@ function nextTurn() {
         item.classList.remove('correct', 'wrong', 'highlighted');
     });
     
-    // Re-enable buttons
-    document.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = false);
-    
     // Check if we need to switch players (for vs modes)
     if (gameState.mode === 'pvp' || gameState.mode === 'team') {
         gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % gameState.players.length;
@@ -399,9 +385,6 @@ function endGame() {
     document.querySelectorAll('.grid-item').forEach(item => {
         item.classList.remove('highlighted', 'correct', 'wrong');
     });
-    
-    // Clear answer buttons
-    document.querySelector('.answer-buttons').innerHTML = '';
     
     stopBackgroundMusic();
     
